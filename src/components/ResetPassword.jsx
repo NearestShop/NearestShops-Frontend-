@@ -30,12 +30,16 @@ const ResetPassword = () => {
     let temp = await putData(`auth/resetpassword/${resetToken}`, { password });
     console.log(temp);
     if(temp.status === "success"){
+      localStorage.removeItem("resetToken");
       toast.success("Password Updated Successfully");
       navigate("/login");
     }else{
       toast.error("Something went wrong please try again");
     }
   };
+
+
+// test
 
   return (
     <section className="flex items-center justify-center px-6 py-20">
