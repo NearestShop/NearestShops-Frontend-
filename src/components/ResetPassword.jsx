@@ -39,8 +39,6 @@ const ResetPassword = () => {
   };
 
 
-// test
-
   return (
     <section className="flex items-center justify-center px-6 py-20">
       <div className="md:flex items-stretch 2xl:items-center shadow-xl bg-white rounded-lg overflow-hidden">
