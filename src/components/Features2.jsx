@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Features2 = () => {
   return (
-    <section className="container mx-auto text-center pb-2 md:pb-16 xl:mb-24 text-white px-4">
+    <section className="container mx-auto text-center pb-2 md:pb-16 md:mb-16 text-white px-4">
       <div className="bg-center bg-cover py-[100px] md:py-[300px] relative xl:bg-fixed" style={{ backgroundImage: `url("/assets/bg1.jpg")` }}>
         <div className="absolute w-full h-full bg-black opacity-20 top-0 left-0" />
         <div className="relative z-[2] px-2">

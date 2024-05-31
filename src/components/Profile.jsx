@@ -10,11 +10,14 @@ import BasicInfoOverlay from "./BasicInfoOverlay";
 import UpdateAvatarOverlay from "./UpdateAvatarOverlay";
 import UpdateAddressOverlay from "./UpdateAddressOverlay";
 import UpdateMeasurementsOverlay from "./UpdateMeasurementsOverlay";
+import UpdatePasswordOverlay from "./UpdatePasswordOverlay";
 
 const Profile = () => {
   const { userData, setUserData } = useAppContext();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
+  const [orders, setOrders] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
   useEffect(() => {
@@ -28,6 +31,15 @@ const Profile = () => {
       setLoading(false);
     };
     fetchWishlist();
+  }, []);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await getData("orders", localStorage.getItem("token"));
+      setOrders(response.order);
+      setLoading2(false);
+    };
+    fetchOrders();
   }, []);
 
   const handleLogout = () => {
@@ -54,17 +66,23 @@ const Profile = () => {
         <h1 className="text-center md:text-left font-semibold text-3xl mb-6">Basic Info</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
           <div className="relative">
-            <img className="size-[100px] rounded-full" src={userData.avatar} alt="profile picture" />
+            <img className="size-[125px] rounded-full" src={userData.avatar} alt="profile picture" />
             <UpdateAvatarOverlay />
           </div>
           <div className="text-center md:text-left">
-            <h1 className="text-2xl font-semibold ">{userData.name}</h1>
-            <div className="flex flex-col md:flex-row items-center gap-4">
-              <div className="flex flex-col md:flex-row items-center gap-2">
+            <h1 className="text-2xl font-semibold mb-4">{userData.name}</h1>
+            <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
+              <div className="flex flex-col md:flex-row items-center gap-2 ">
                 <p>Email: {userData.email}</p>
                 <p>Phone: {userData.phone}</p>
               </div>
               <BasicInfoOverlay />
+            </div>
+            <div className="flex items-center gap-2">
+              <p>
+                Password: <span>**********</span>
+              </p>
+              <UpdatePasswordOverlay />
             </div>
           </div>
         </div>
@@ -86,6 +104,38 @@ const Profile = () => {
             <p>{userData.height}</p>
           </div>
         </div>
+        <hr className="h-[2px] bg-[#f6f3ef] mb-6" />
+        <h1 className="text-center md:text-left font-semibold text-3xl mb-6">Orders</h1>
+        {loading2 ? (
+          <p className="text-xl mb-6 font-medium">Loading...</p>
+        ) : orders.length === 0 ? (
+          <p className="mb-6">No Orders</p>
+        ) : (
+          <div className="flex flex-wrap gap-4 mb-6">
+            {orders.map((order, index) => (
+              <div className="bg-primary p-4" key={index}>
+                <p className="capitalize font-medium text-lg">
+                  Order Price: <span className="font-normal">{order.totalPrice.toFixed(2)}EGP</span>
+                </p>
+                <p className="capitalize font-medium text-lg">
+                  Delivery Address: <span className="font-normal">{order.address}</span>
+                </p>
+                <p className="capitalize font-medium text-lg">
+                  State: <span className="font-normal">{order.state}</span>
+                </p>
+                <p className="capitalize font-medium text-lg">
+                  Order Date: <span className="font-normal">{order.createdAt.split("T")[0]}</span>
+                </p>
+                {/* <p className="capitalize font-medium text-lg">
+                  Products:{" "}
+                  {order.products.map((product, index) => (
+                    <span key={index}>{product.productID.id},</span>
+                  ))}
+                </p> */}
+              </div>
+            ))}
+          </div>
+        )}
         <hr className="h-[2px] bg-[#f6f3ef] mb-6" />
         <h1 className="text-center md:text-left font-semibold text-3xl mb-6">Wishlist</h1>
         {loading ? (

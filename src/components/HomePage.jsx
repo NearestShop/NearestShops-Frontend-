@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useAppContext } from "../Context/AppContext";
 
 import Hero from "./Hero";
 import BestSellers from "./BestSellers";
@@ -7,8 +8,11 @@ import Features2 from "./Features2";
 import Features3 from "./Features3";
 import NewArrivals from "./NewArrivals";
 import Review from "./Review";
+import Recommended from "./Recommended";
+import TalkToChat from "./TalkToChat";
 
 const HomePage = () => {
+  const { userData } = useAppContext();
 
   useEffect(() => {
     document.title = `Nearest Shops`;
@@ -18,9 +22,11 @@ const HomePage = () => {
   return (
     <>
       <Hero />
+      <TalkToChat />
       <BestSellers />
       <Features1 />
       <Features2 />
+      {userData.loggedIn && <Recommended />}
       <Features3 />
       <NewArrivals />
       <Review />

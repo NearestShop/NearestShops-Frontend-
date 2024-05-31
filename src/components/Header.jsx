@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import SideMenu from "./SideMenu";
 import Cart from "./Cart";
+import SearchBar from "./SearchBar";
 
 import logo from "/assets/logo.png";
 
@@ -33,7 +34,7 @@ const Header = () => {
         </ul>
       </nav>
       <div className="flex items-center gap-4">
-        <i className="fa-solid fa-magnifying-glass hover:text-secondary duration-200 cursor-pointer md:text-2xl"></i>
+        <SearchBar />
         {userData.loggedIn ? (
           <>
             <Cart />

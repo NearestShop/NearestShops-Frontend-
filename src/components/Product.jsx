@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useAppContext } from "../Context/AppContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { getData, postData, deleteData } from "../Services/apiCalls";
-import Skeleton from "@mui/material/Skeleton";
+
+import ProductSkeleton from "./ProductSkeleton";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,6 +12,7 @@ const Product = () => {
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(1);
+  const [size, setSize] = useState("");
   const { name } = useParams();
   const { userData } = useAppContext();
   const userToken = localStorage.getItem("token");
@@ -33,19 +35,19 @@ const Product = () => {
   }, []);
 
   const toggleWishlist = async () => {
-    if(product.isInFavorites) {
+    if (product.isInFavorites) {
       const response = await deleteData(`users/wishlist/${product._id}`, userToken);
-      if(response.status === "success"){
+      if (response.status === "success") {
         window.location.reload();
-      }           
-    }else{
+      }
+    } else {
       const response = await postData(`users/wishlist/${product._id}`, {}, userToken);
       console.log(response);
-      if(response.status === "success"){
+      if (response.status === "success") {
         window.location.reload();
       }
     }
-  }
+  };
 
   const handleAddToCart = async () => {
     if (!userData.loggedIn) {
@@ -53,9 +55,11 @@ const Product = () => {
       toast.error("Please login to add to cart");
       return;
     }
-    const response = await postData("cart", { products: {productID: product._id, quantity: count}}, userToken);
-    console.log(response);
-    if(response.message === "Item Added to Cart"){
+    if (size === "") {
+      return toast.error("Please select a size");
+    }
+    const response = await postData("cart", { products: { productID: product._id, quantity: count, size } }, userToken);
+    if (response.message === "Item Added to Cart") {
       toast.success("Item Added to Cart");
     }
   };
@@ -63,18 +67,7 @@ const Product = () => {
   return (
     <section className={`container mx-auto px-4 py-24 flex flex-col lg:flex-row gap-6 lg:gap-12 items-center`}>
       {loading ? (
-        <>
-          <div className="basis-1/2 flex justify-end">
-            <Skeleton variant="rectangle" width="60%" height={500} animation="wave" />
-          </div>
-          <div className="basis-1/2">
-            <Skeleton variant="text" width="100px" animation="wave" />
-            <Skeleton variant="text" width="300px" animation="wave" />
-            <Skeleton variant="text" width="300px" animation="wave" />
-            <Skeleton variant="text" width="500px" animation="wave" />
-            <Skeleton variant="text" width="500px" animation="wave" />
-          </div>
-        </>
+        <ProductSkeleton />
       ) : (
         <>
           <div className="basis-1/2 flex lg:justify-end">
@@ -87,13 +80,13 @@ const Product = () => {
             <p className="font-semibold text-xl mb-2">
               ${product.price} <span className="text-sm font-normal text-[#b3b1b1]">& Free Shipping</span>
             </p>
-            <p className="text-[#b3b1b1] font-[300] text-sm mb-2">{product.description}</p>
-            <div className="mb-4 flex gap-4">
+            <p className="text-[#b3b1b1] font-[300] text-sm my-4">{product.description}</p>
+            <div className="mb-6 flex items-center gap-4">
               {product.sizes.length > 0 && (
                 <>
-                  <h4 className="mb-1 font-semibold">Sizes</h4>
+                  <h4 className="font-semibold">Sizes</h4>
                   {product.sizes.map((size, index) => (
-                    <div className="size-[30px] text-sm flex justify-center items-center border border-[#dddddd] hover:border-black text-[#b3b1b1] hover:text-black duration-200" key={index}>
+                    <div onClick={() => setSize(size.size)} className={`size-[30px] cursor-pointer text-sm flex justify-center items-center border  hover:border-black  hover:text-black duration-200 ${size === size.size ? "border-black text-black" : "border-[#dddddd] text-[#b3b1b1]"}`} key={index}>
                       {size.size}
                     </div>
                   ))}
@@ -101,7 +94,9 @@ const Product = () => {
               )}
             </div>
             <div className="flex items-center mb-4">
-              <button onClick={handleAddToCart} className="bg-secondary hover:bg-accent text-white text-sm duration-300 px-6 h-[40px] mr-8">Add To Cart</button>
+              <button onClick={handleAddToCart} className="bg-secondary hover:bg-accent text-white text-sm duration-300 px-6 h-[40px] mr-8">
+                Add To Cart
+              </button>
               <button
                 onClick={() => {
                   if (count > 1) {
@@ -117,7 +112,11 @@ const Product = () => {
                 +
               </button>
             </div>
-            {userData.loggedIn && <button onClick={toggleWishlist} className="bg-secondary hover:bg-accent text-white text-sm duration-300 px-6 h-[40px]">{product.isInFavorites ? "Remove From Wishlist" : "Add To Wishlist"}</button>}
+            {userData.loggedIn && (
+              <button onClick={toggleWishlist} className="bg-secondary hover:bg-accent text-white text-sm duration-300 px-6 h-[40px]">
+                {product.isInFavorites ? "Remove From Wishlist" : "Add To Wishlist"}
+              </button>
+            )}
           </div>
         </>
       )}

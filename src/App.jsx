@@ -19,6 +19,12 @@ import Product from "./components/Product";
 import ForgotPassword from "./components/ForgotPassword";
 import OTP from "./components/OTP";
 import ResetPassword from "./components/ResetPassword";
+import CartPage from "./components/CartPage";
+import PaymentType from "./components/PaymentType";
+import CashOnDelivery from "./components/CashOnDelivery";
+import PayOnline from "./components/PayOnline";
+import Search from "./components/Search";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   const loggedIn = Boolean(localStorage.getItem("token"));
@@ -62,6 +68,12 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/otp" element={<OTP />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/payment-type" element={<PaymentType />} />
+          <Route path="/cash-on-delivery" element={<CashOnDelivery />} />
+          <Route path="/pay-online" element={<PayOnline />} />
+          <Route path="/search/:query" element={<Search />} />
+          <Route path="/chatbot" element={<Chatbot />} />
         </Routes>
         <Footer />
       </Router>
