@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAppContext } from "../Context/AppContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { getData, postData, deleteData } from "../Services/apiCalls";
+import Rating from "@mui/material/Rating";
 
 import ProductSkeleton from "./ProductSkeleton";
 
@@ -15,6 +16,7 @@ const Product = () => {
   const [size, setSize] = useState("");
   const { name } = useParams();
   const { userData } = useAppContext();
+  const [value, setValue] = useState(0);
   const userToken = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -26,6 +28,7 @@ const Product = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       const response = await getData(`products/${name}`, userToken);
+      console.log(response);
       if (response.status === "success") {
         setProduct(response.data.product);
         setLoading(false);
@@ -46,6 +49,14 @@ const Product = () => {
       if (response.status === "success") {
         window.location.reload();
       }
+    }
+  };
+
+  const handleRating = async (value) => {
+    setValue(value);
+    const response = await postData("reviews", { product: product.id, rating: value }, userToken);
+    if (response.status === "success") {
+      toast.success("Rating Added Successfully");
     }
   };
 
@@ -116,6 +127,18 @@ const Product = () => {
               <button onClick={toggleWishlist} className="bg-secondary hover:bg-accent text-white text-sm duration-300 px-6 h-[40px]">
                 {product.isInFavorites ? "Remove From Wishlist" : "Add To Wishlist"}
               </button>
+            )}
+            {userData.loggedIn && (
+              <div className="mt-6">
+                <Rating
+                  name="simple-controlled"
+                  className="text-2xl"
+                  value={value}
+                  onChange={(event, newValue) => {
+                    handleRating(newValue);
+                  }}
+                />
+              </div>
             )}
           </div>
         </>

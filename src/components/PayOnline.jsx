@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../Context/AppContext";
 import { postData } from "../Services/apiCalls";
 
-import cod from "/assets/onlinePayment.svg";
 
 import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/es/styles-compiled.css";

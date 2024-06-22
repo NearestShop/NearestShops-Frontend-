@@ -45,6 +45,7 @@ function App() {
             role: response.data.user.role,
             avatar: response.data.user.photo,
             wishlist: response.data.user.wishlist,
+            government: response.data.user.government,
             loggedIn: true,
           });
         }

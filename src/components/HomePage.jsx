@@ -10,6 +10,7 @@ import NewArrivals from "./NewArrivals";
 import Review from "./Review";
 import Recommended from "./Recommended";
 import TalkToChat from "./TalkToChat";
+import NearYou from "./NearYou";
 
 const HomePage = () => {
   const { userData } = useAppContext();
@@ -23,13 +24,14 @@ const HomePage = () => {
     <>
       <Hero />
       <TalkToChat />
+      {userData.loggedIn && <NearYou />}
       <BestSellers />
       <Features1 />
       <Features2 />
       {userData.loggedIn && <Recommended />}
       <Features3 />
       <NewArrivals />
-      <Review />
+      {/* <Review /> */}
     </>
   );
 };

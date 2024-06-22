@@ -17,8 +17,9 @@ const Search = () => {
 
   useEffect(() => {
     const fetchCollection = async () => {
-      const response = await getData(`products/search?name=${query}`);
-      setProducts(response.products);
+      const response = await getData(`products/search?search=${query}`);
+      console.log(response);
+      setProducts(response.data.products);
       setLoading(false);
     };
     fetchCollection();

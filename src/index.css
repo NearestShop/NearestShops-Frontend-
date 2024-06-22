@@ -14,3 +14,8 @@
 .minHeight {
   min-height: calc(100vh - 505px)
 }
+
+.MuiRating-root{
+  font-size: 1.8rem !important;
+  color: #ffd700 !important;
+}

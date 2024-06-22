@@ -108,7 +108,7 @@ const Profile = () => {
         <h1 className="text-center md:text-left font-semibold text-3xl mb-6">Orders</h1>
         {loading2 ? (
           <p className="text-xl mb-6 font-medium">Loading...</p>
-        ) : orders.length === 0 ? (
+        ) : !orders || orders.length === 0 ? (
           <p className="mb-6">No Orders</p>
         ) : (
           <div className="flex flex-wrap gap-4 mb-6">

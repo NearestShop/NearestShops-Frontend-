@@ -8,6 +8,8 @@ import image from "/assets/loginImage.svg";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const list = ["الإسكندرية", "الإسماعيلية", "أسوان", "أسيوط", "الأقصر", "البحيرة", "البحر الأحمر", "الجيزة", "الدقهلية", "السويس", "الشرقية", "الغربية", "الفيوم", "القاهرة", "القليوبية", "المنوفية", "المنيا", "الوادي الجديد", "بني سويف", "بورسعيد", "جنوب سيناء", "دمياط", "سوهاج", "شمال سيناء", "قنا", "كفر الشيخ", "مطروح"];
+
 const SignUp = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -16,6 +18,7 @@ const SignUp = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
+  const [address, setAddress] = useState("");
   const { userData, setUserData } = useAppContext();
   const navigate = useNavigate();
 
@@ -23,7 +26,7 @@ const SignUp = () => {
   const regEmail = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/;
 
   const handleRegister = async () => {
-    if (!name || !phone || !email || !password || !passwordConfirm || !height || !weight) {
+    if (!name || !phone || !email || !password || !passwordConfirm || !height || !weight || !address) {
       return toast.error("Please fill all the fields");
     }
     if (!phone.match(regNumbers)) {
@@ -54,7 +57,7 @@ const SignUp = () => {
       return toast.error("Enter a valid weight");
     }
     toast.info("Registering...");
-    let response = await postData("auth/register", { name, phone, email, password, passwordConfirm, height, weight });
+    let response = await postData("auth/register", { name, phone, email, password, passwordConfirm, height, weight, address });
     if (response.status === "success") {
       setUserData({
         ...userData,
@@ -67,12 +70,13 @@ const SignUp = () => {
         role: response.data.user.role,
         avatar: response.data.user.photo,
         wishlist: response.data.user.wishlist,
+        government: response.data.user.government,
         loggedIn: true,
       });
       localStorage.setItem("token", response.token);
       toast.success("Registered Successfully");
       navigate("/");
-    }else{
+    } else {
       toast.error(response.response.data.message);
     }
   };
@@ -130,6 +134,19 @@ const SignUp = () => {
               </label>
               <input onChange={(e) => setWeight(e.target.value)} className="outline-none mb-4 bg-[#A69E97] text-secondary p-2 rounded-lg" type="text" id="weight" />
             </div>
+          </div>
+          <div className="flex flex-col mb-4">
+            <label className="text-secondary font-semibold text-lg mb-2" htmlFor="weight">
+              Government
+            </label>
+            <select onChange={(e) => setAddress(e.target.value)} className="w-full border-2 p-2 text-xl outline-none" name="" id="">
+              <option value="none"></option>
+              {list.map((item, index) => (
+                <option key={index} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
           </div>
           <button onClick={handleRegister} className="bg-secondary hover:bg-accent duration-200 text-white py-2 px-8 rounded-xl block mx-auto">
             Sign Up

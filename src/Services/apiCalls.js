@@ -50,7 +50,7 @@ export const putData = async (url, data, token) => {
       result = error;
     });
   return result;
-}
+};
 
 export const deleteData = async (url, token) => {
   let result = [];
